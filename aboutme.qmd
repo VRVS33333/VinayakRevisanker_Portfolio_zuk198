@@ -2,6 +2,18 @@
 title: "About me"
 ---
 
-Add some text and a figure describing myself.
+Hello my name is Vinayak Revisanker, a pleasure to meet you. My background lies in Cyber security and Information Systems, I have training in being a Cyber security Controls Consultant where I helped financial institutions ensure that all security items were in place.
 
-For details, see the exercise instructions. 
+
+## Experience and interests
+
+I have experience in working with R Studio, Java, Python, and SQL. My research interest lies in predicting stock market spikes and drops and translation apps to eventually create my own version.  I'm hoping to learn more about using github and Rstudio and even SQL to get a bit more of an understanding for each tool to hopefully be hired soon. One interesting tibid about me is that I collect art pieces from independent artist that I find interesting.
+
+
+
+
+
+
+
+##Interesting Dataset
+https://github.com/ashgreat/DA6233/blob/master/datasets/Covid-19/Covid%2019%20-%20John%20Jopkins.docx
