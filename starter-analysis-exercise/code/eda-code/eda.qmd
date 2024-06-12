@@ -103,6 +103,8 @@ p4 <- mydata %>% ggplot(aes(x=Height, y=Weight, color = Gender)) + geom_point() 
 plot(p4)
 figure_file = here("starter-analysis-exercise","results","figures","height-weight-stratified.png")
 ggsave(filename = figure_file, plot=p4) 
+
+boxplot(eye color)
 ```
 
 
