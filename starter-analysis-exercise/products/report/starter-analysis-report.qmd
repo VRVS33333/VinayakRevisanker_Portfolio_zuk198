@@ -1,8 +1,8 @@
 ---
 title: "Manuscript/Report Template for a Data Analysis Project"
 subtitle: ""
-author: Your Name
-date: today
+author: Vinayak Revisanker
+date: 6/12/2024
 format:
   html:
     toc: false
