@@ -1,0 +1,196 @@
+---
+title: "Example Manuscript Template for a Data Analysis Project"
+subtitle: ""
+author: Andreas Handel
+date: "`r Sys.Date()`"
+format:
+  docx:
+    toc: false
+    number-sections: true
+    highlight-style: github
+bibliography: ../../assets/dataanalysis-references.bib
+csl: ../../assets/apa.csl
+---
+
+The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. 
+You don't need to have exactly these sections, but the content covering those sections should be addressed.
+
+This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats.
+
+
+```{r, echo=FALSE, message=FALSE}
+# R packages
+library(here)
+library(knitr)
+library(DescTools)
+library(ResourceSelection)
+library(MASS) 
+library(car) 
+library(olsrr)
+library(LearnBayes)
+library(ggplot2)
+library(caret)
+library(earth)
+
+```
+
+
+
+# Summary/Abstract
+_This project analyzes methane and carbon dioxide levels in a furnace over time. The goal is to identify patterns and potential correlations between the two gases
+._
+
+
+{{< pagebreak >}}
+
+
+# Introduction 
+
+## General Background Information
+_Methane and carbon dioxide are significant greenhouse gases that contribute to global warming. Understanding their behavior and levels in industrial processes, such as in furnaces, is crucial for environmental monitoring and control._ 
+
+## Description of data and data source
+_The dataset contains measurements of methane and carbon dioxide levels recorded every minute in a furnace. The data includes three columns: observation time (obs), carbon dioxide levels (co2), and methane levels (methane). The source of the data is not specified but is presumed to be from an industrial monitoring system._
+
+## Questions/Hypotheses to be addressed
+_Is there a correlation between methane and carbon dioxide levels in the furnace?_
+
+
+
+
+{{< pagebreak >}}
+
+
+# Methods 
+
+_The data was acquired from a CSV file containing minute-by-minute recordings of methane and carbon dioxide levels in a furnace._
+
+
+## Schematic of workflow
+
+Sometimes you might want to show a schematic diagram/figure that was not created with code (if you can do it with code, do it). @fig-schematic is an example of some - completely random/unrelated - schematic that was generated with Biorender.
+We store those figures in the `assets` folder.
+
+```{r}
+#| label: fig-schematic
+#| fig-cap: "A figure that is manually generated and shows some overview/schematic. This has nothing to do with the data, it's just a random one from one of our projects I found and placed here."
+#| echo: FALSE
+knitr::include_graphics(here("assets","antigen-recognition.png"))
+```
+
+
+
+
+## Data aquisition
+_As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next._
+
+
+## Data import and cleaning
+_Write code that reads in the file and cleans it so it's ready for analysis. Since this will be fairly long code for most datasets, it might be a good idea to have it in one or several R scripts. If that is the case, explain here briefly what kind of cleaning/processing you do, and provide more details and well documented code somewhere (e.g. as supplement in a paper). All materials, including files that contain code, should be commented well so everyone can follow along._
+
+
+## Statistical analysis
+_Explain anything related to your statistical analyses._
+
+
+{{< pagebreak >}}
+
+
+# Results
+
+## Exploratory/Descriptive analysis
+
+_Use a combination of text/tables/figures to explore and describe your data. Show the most important descriptive results here. Additional ones should go in the supplement. Even more can be in the R and Quarto files that are part of your project._
+
+
+@tbl-summarytable shows a summary of the data.
+
+Note the loading of the data providing a **relative** path using the `../../` notation. (Two dots means a folder up). You never want to specify an **absolute** path like `C:\ahandel\myproject\results\` because if you share this with someone, it won't work for them since they don't have that path. You can also use the `here` R package to create paths. See examples of that below. I generally recommend the `here` package.
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+
+# Read the CSV file
+file_path <- "Methane in the Furnance.csv"
+df <- read_csv(file_path)
+
+# Convert 'obs' column to time format
+df <- df %>% mutate(obs = hms::as_hms(obs))
+
+# Check for missing values
+missing_values <- colSums(is.na(df))
+print(missing_values)
+
+# Display the first few rows of the dataframe to confirm the conversion
+head(df)
+```
+
+
+
+## Basic statistical analysis
+
+_To get some further insight into your data, if reasonable you could compute simple statistics (e.g. simple models with 1 predictor) to look for associations between your outcome(s) and each individual predictor variable. Though note that unless you pre-specified the outcome and main exposure, any "p<0.05 means statistical significance" interpretation is not valid._
+
+
+
+
+```{r}
+co2_summary <- summary(df$co2)
+methane_summary <- summary(df$methane)
+
+print(co2_summary)
+print(methane_summary)
+
+
+# Plot CO2 levels over time
+ggplot(df, aes(x = obs, y = co2)) +
+  geom_line(color = "blue") +
+  labs(title = "CO2 Levels Over Time", x = "Time", y = "CO2 Level") +
+  theme_minimal()
+
+# Plot methane levels over time
+ggplot(df, aes(x = obs, y = methane)) +
+  geom_line(color = "orange") +
+  labs(title = "Methane Levels Over Time", x = "Time", y = "Methane Level") +
+  theme_minimal()
+
+
+# Calculate the correlation between CO2 and methane levels
+correlation <- cor(df$co2, df$methane, use = "complete.obs")
+print(paste("Correlation between CO2 and methane levels:", correlation))
+
+
+
+```
+
+
+
+
+{{< pagebreak >}}
+
+
+# Discussion
+
+## Summary and Interpretation
+_The analysis showed that both CO2 and methane levels fluctuate over time. The correlation between the two gases will provide insight into their relationship in the furnace environment._
+
+## Strengths and Limitations
+_Discuss what you perceive as strengths and limitations of your analysis._
+
+## Conclusions
+_Understanding the behavior of methane and carbon dioxide in furnaces can help in developing better control strategies to reduce emissions. Further research with more context-specific data is recommended._
+
+This paper [@leek2015] discusses types of analyses. 
+
+These papers [@mckay2020; @mckay2020a] are good examples of papers published using a fully reproducible setup similar to the one shown in this template. 
+
+Note that this cited reference will show up at the end of the document, the reference formatting is determined by the CSL file specified in the YAML header. Many more style files for almost any journal [are available](https://www.zotero.org/styles). You also specify the location of your bibtex reference file in the YAML. You can call your reference file anything you like.
+
+
+{{< pagebreak >}}
+
+# References
+
+
+
