@@ -2,6 +2,7 @@
 title: "Manuscript/Report Template for a Data Analysis Project"
 subtitle: ""
 author: Vinayak Revisanker
+Contributer: Zane Chumley
 date: 6/12/2024
 format:
   html:
@@ -119,6 +120,18 @@ Example @tbl-resulttable2 shows a summary of a linear model fit.
 #| echo: FALSE
 resulttable2 = readRDS(here("starter-analysis-exercise","results","tables-files","resulttable2.rds"))
 knitr::kable(resulttable2)
+
+
+#| label: tbl-resulttable1
+#| tbl-cap: "Linear model fit table for Column 3."
+#| echo: FALSE
+knitr::kable(resulttable1)
+
+#| label: tbl-resulttable2
+#| tbl-cap: "Linear model fit table for Column 4."
+#| echo: FALSE
+knitr::kable(resulttable2)
+
 ```
 
 
