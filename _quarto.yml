@@ -18,6 +18,7 @@ website:
             file: presentation-exercise/presentation-exercise.qmd
           - text: "Tidy Tuesday Exercise"
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
+
     right:
       - icon: github 
         href: https://github.com/zuk198/VinayakRevisanker       

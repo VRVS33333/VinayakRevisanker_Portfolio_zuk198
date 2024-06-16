@@ -2,7 +2,7 @@
 ---
 title: "Example Manuscript Template for a Data Analysis Project"
 subtitle: ""
-author: Andreas Handel
+author: Vinayak Revisanker
 date: "`r Sys.Date()`"
 format:
   docx:
