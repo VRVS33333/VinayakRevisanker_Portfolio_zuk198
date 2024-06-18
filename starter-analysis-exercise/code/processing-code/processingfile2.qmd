@@ -1,7 +1,7 @@
 ---
-title: "An example cleaning script"
-author: "Andreas Handel"
-date: "2023-01-03"
+title: "A cleaning script for Vinayak's exampledata2.xslx"
+author: "Zane Chumley (adapted from Andreas Handel)"
+date: "2024-06-14"
 output: html_document
 ---
 
@@ -21,6 +21,7 @@ library(dplyr) #for data processing/cleaning
 library(tidyr) #for data processing/cleaning
 library(skimr) #for nice visualization of data 
 library(here) #to set paths
+library(tidyverse)
 ```
 
 
@@ -107,6 +108,7 @@ d4 <- d3 %>% dplyr::filter( !(Gender %in% c("NA","N")) ) %>% droplevels()
 skimr::skim(d4)
 ```
 
+None of the data added by Vinayak needed to be cleaned.
 
 All done, data is clean now. 
 
@@ -127,7 +129,7 @@ See here for some suggestions on how to store your processed data:
 http://www.sthda.com/english/wiki/saving-data-into-r-data-format-rds-and-rdata
 
 ```{r}
-save_data_location <- here::here("starter-analysis-exercise","data","processed-data","processeddata.rds")
+save_data_location <- here::here("starter-analysis-exercise","data","processed-data","processeddata2.rds")
 saveRDS(processeddata, file = save_data_location)
 ```
 
