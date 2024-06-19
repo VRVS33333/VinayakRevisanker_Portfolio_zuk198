@@ -1,45 +1,47 @@
 ---
 title: "R Coding Exercise"
+
+By: Vinayak Revisanker zuk198
 ---
 
-#load dslabs package
+# load dslabs package
 library("dslabs")
 #look at help file for gapminder data
 help(gapminder)
 
 
-#get an overview of data structure
+#g et an overview of data structure
 str(gapminder)
 
-#get a summary of data
+# get a summary of data
 summary(gapminder)
 
 
 class(gapminder)
 
-#Assign data from Africa to africadata
+# Assign data from Africa to africadata
 africadata <- subset(gapminder, continent == "Africa")
 
-#overview of africadata
+# overview of africadata
 str(africadata)
 
-#summary of africadata
+# summary of africadata
 summary(africadata)
 
-#2 new datasets
+# 2 new datasets
 africadata_inf_life <- africadata[, c("infant_mortality", "life_expectancy")]
 africadata_pop_life <- africadata[, c("population", "life_expectancy")]
 
-#for africadata_inf_life
+# for africadata_inf_life
 str(africadata_inf_life)
 summary(africadata_inf_life)
 
-#for africadata_inf_life
+# for africadata_inf_life
 str(africadata_pop_life)
 summary(africadata_pop_life)
 
 
-#plotting data
+# plotting data
 
 #plotting for infant mortality and life expectancy
 plot(africadata_inf_life$infant_mortality, africadata_inf_life$life_expectancy,
@@ -51,7 +53,7 @@ plot(africadata_pop_life$population, africadata_pop_life$life_expectancy,
      log = "x")
      
      
-#More data processing
+# More data processing
 
 missing_years <- table(africadata$year[is.na(africadata$infant_mortality)])
 missing_years # Display the years with missing infant mortality data
@@ -77,9 +79,9 @@ plot(africadata_2000$population, africadata_2000$life_expectancy,
      xlab = "Population (log scale)", ylab = "Life Expectancy", main = "Life Expectancy vs. Population Size (2000)",
      log = "x")
 
-#Simple model fits
+# Simple model fits
 
-#simple model fits for life expectancy and infant mortality based on the data from Africa from year 2000
+# simple model fits for life expectancy and infant mortality based on the data from Africa from year 2000
 model_fit1 <- lm(life_expectancy ~ infant_mortality, data = africadata_2000) 
 summary(model_fit1) 
 
