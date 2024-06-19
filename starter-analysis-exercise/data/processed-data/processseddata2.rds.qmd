@@ -33,6 +33,7 @@ but it adds typing. You can do it either way.
 ```{r}
 # path to data
 # note the use of the here() package and not absolute paths
+# note: for some reason, rawdata is not clean
 data_location <- here::here("starter-analysis-exercise","data","raw-data","exampledata2.xlsx")
 rawdata <- readxl::read_excel(data_location)
 ```
