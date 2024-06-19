@@ -59,6 +59,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -146,9 +148,42 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Placeholder file for the future R coding exercise.</p>
+<p>#load dslabs package library(“dslabs”) #look at help file for gapminder data help(gapminder)</p>
+<p>#get an overview of data structure str(gapminder)</p>
+<p>#get a summary of data summary(gapminder)</p>
+<p>class(gapminder)</p>
+<p>#Assign data from Africa to africadata africadata &lt;- subset(gapminder, continent == “Africa”)</p>
+<p>#overview of africadata str(africadata)</p>
+<p>#summary of africadata summary(africadata)</p>
+<p>#2 new datasets africadata_inf_life &lt;- africadata[, c(“infant_mortality”, “life_expectancy”)] africadata_pop_life &lt;- africadata[, c(“population”, “life_expectancy”)]</p>
+<p>#for africadata_inf_life str(africadata_inf_life) summary(africadata_inf_life)</p>
+<p>#for africadata_inf_life str(africadata_pop_life) summary(africadata_pop_life)</p>
+<p>#plotting data</p>
+<p>#plotting for infant mortality and life expectancy plot(africadata_inf_life<span class="math inline">\(infant_mortality, africadata_inf_life\)</span>life_expectancy, xlab = “Infant Mortality”, ylab = “Life Expectancy”, main = “Life Expectancy vs.&nbsp;Infant Mortality”)</p>
+<p>plot(africadata_pop_life<span class="math inline">\(population, africadata_pop_life\)</span>life_expectancy, xlab = “Population (log scale)”, ylab = “Life Expectancy”, main = “Life Expectancy vs.&nbsp;Population Size”, log = “x”)</p>
+<p>#More data processing</p>
+<p>missing_years &lt;- table(africadata<span class="math inline">\(year[is.na(africadata\)</span>infant_mortality)]) missing_years # Display the years with missing infant mortality data</p>
+<section id="extract-data-for-the-year-2000" class="level1">
+<h1>Extract data for the year 2000</h1>
+<p>africadata_2000 &lt;- subset(africadata, year == 2000) # Subset data for the year 2000</p>
+<p>#Overview and summary of the 2000 dataset str(africadata_2000) # Display the structure of africadata_2000 summary(africadata_2000) # Display a summary of africadata_2000</p>
+</section>
+<section id="more-plotting" class="level1">
+<h1>More plotting</h1>
+</section>
+<section id="plotting-for-infant-mortality-and-life-expectancy-in-the-year-2000" class="level1">
+<h1>#plotting for infant mortality and life expectancy in the year 2000</h1>
+<p>plot(africadata_2000<span class="math inline">\(infant_mortality, africadata_2000\)</span>life_expectancy, xlab = “Infant Mortality”, ylab = “Life Expectancy”, main = “Life Expectancy vs.&nbsp;Infant Mortality (2000)”)</p>
+</section>
+<section id="plot-life-expectancy-and-population-size-in-the-year-2000" class="level1">
+<h1>Plot life expectancy and population size in the year 2000</h1>
+<p>plot(africadata_2000<span class="math inline">\(population, africadata_2000\)</span>life_expectancy, xlab = “Population (log scale)”, ylab = “Life Expectancy”, main = “Life Expectancy vs.&nbsp;Population Size (2000)”, log = “x”)</p>
+<p>#Simple model fits</p>
+<p>#simple model fits for life expectancy and infant mortality based on the data from Africa from year 2000 model_fit1 &lt;- lm(life_expectancy ~ infant_mortality, data = africadata_2000) summary(model_fit1)</p>
+<p>#simple model fits for life expectancy and population based on the data from Africa from year 2000 model_fit2 &lt;- lm(life_expectancy ~ population, data = africadata_2000) summary(model_fit2) summary(model_fit2)</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
