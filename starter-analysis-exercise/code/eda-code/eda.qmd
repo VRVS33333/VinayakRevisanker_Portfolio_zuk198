@@ -106,6 +106,14 @@ ggsave(filename = figure_file, plot=p4)
 ```
 
 
+```{r}
+p5 <- mydata %>% ggplot(aes(x=Weight, y=BMI)) + geom_point() + geom_smooth(method='lm')
+plot(p5)
+figure_file = here("starter-analysis-exercise","results","figures","height-weight-stratified.png")
+ggsave(filename = figure_file, plot=p5) 
+```
+
+
 
 # Notes
 

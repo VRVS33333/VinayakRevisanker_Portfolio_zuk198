@@ -37,13 +37,12 @@ _Write a summary of your project._
 # Introduction 
 
 ## General Background Information
-_Provide enough background on your topic that others can understand the why and how of your analysis_ 
+_The point of this project was to understand fork/ pull requisitions between two people_ 
 
 ## Description of data and data source
-_Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
+_The data is an excel sheet with peoples Weight, Height, Gender and two others that I created which is Shoe size and Eye Color._
 
-## Questions/Hypotheses to be addressed
-_State the research questions you plan to answer with this analysis._
+
 
 To cite other work (important everywhere, but likely happens first in introduction), make sure your references are in the bibtex file specified in the YAML header above (here `dataanalysis_template_references.bib`) and have the right bibtex key. Then you can include like this:
 
@@ -159,8 +158,6 @@ Note that this cited reference will show up at the end of the document, the refe
 
 
 {{< pagebreak >}}
-
-# References
 
 
 
