@@ -125,6 +125,13 @@ print(missing_values)
 
 # Display the first few rows of the dataframe to confirm the conversion
 head(df)
+
+
+co2_plot <- ggplot2::ggsave("results/co2_plot.png")
+methane_plot <- ggplot2::ggsave("results/methane_plot.png")
+
+co2_plot
+methane_plot
 ```
 
 

@@ -61,13 +61,12 @@ ggplot(df, aes(x = obs, y = methane)) +
   theme_minimal()
 
 
+ggsave("co2_plot.png", plot = last_plot())
+ggsave("methane_plot.png", plot = last_plot())
+
 # Calculate the correlation between CO2 and methane levels
 correlation <- cor(df$co2, df$methane, use = "complete.obs")
 print(paste("Correlation between CO2 and methane levels:", correlation))
-
-
-
-
 
 
 
@@ -93,9 +92,34 @@ df <- df %>% mutate(
   methane = ifelse(is.na(methane), mean(methane, na.rm = TRUE), methane)
 )
 
-return(df)
+# Calculate the correlation between CO2 and methane levels
+correlation <- cor(df$co2, df$methane, use = "complete.obs")
+print(paste("Correlation between CO2 and methane levels:", correlation))
 
+# Save the correlation result
+write(paste("Correlation between CO2 and methane levels:", correlation), 
+      file = "results/analysis_summary.txt")
 
+# Create the manuscript directory
+dir.create("manuscript", showWarnings = FALSE)
+
+# Additional analysis using tidymodels
+df <- df %>%
+  select(-obs) %>%
+  drop_na()
+
+# Fit a linear model
+lm_fit <- lm(co2 ~ methane, data = df)
+summary(lm_fit)
+
+# Save the summary of the model
+capture.output(summary(lm_fit), file = "results/lm_summary.txt")
+
+correlation <- readLines("results/analysis_summary.txt")
+print(correlation)
+
+lm_summary <- readLines("results/lm_summary.txt")
+cat(lm_summary, sep = "\n")
 # Discussion
 
 ## Summary and Interpretation

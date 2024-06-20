@@ -1,0 +1,19 @@
+
+Call:
+lm(formula = co2 ~ methane, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.2139 -2.0642  0.0954  2.2743  6.5750 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  53.4269     0.1633 327.116   <2e-16 ***
+methane      -1.4460     0.1523  -9.495   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.806 on 294 degrees of freedom
+Multiple R-squared:  0.2347,	Adjusted R-squared:  0.2321 
+F-statistic: 90.16 on 1 and 294 DF,  p-value: < 2.2e-16
+
