@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "data-exercise/data-exercise.html",
+    "href": "data-exercise/data-exercise.html",
+    "title": "Data Exercise",
+    "section": "",
+    "text": "library(ggplot2)\nset.seed(42)\n\nGenerate age data\nage &lt;- rnorm(1000, mean = 20, sd = 6) # Normal distribution, mean=20, sd=6 age &lt;- pmax(pmin(age, 30), 10) # Limit the age between 10 and 30\n\n\nGenerate weight data based on age\nweight &lt;- 100 + age * 10 + rnorm(1000, mean = 0, sd = 15)\n\n\nGenerate height data based on weight\nheight &lt;- 120 + 0.4 * weight + rnorm(1000, mean = 0, sd = 10)\n\n\nGenerate alpha status based on weight and age\nalpha_prob &lt;- 1 / (1 + exp(-0.05 * (weight + age - 200))) alpha_status &lt;- rbinom(1000, 1, alpha_prob)\n\n\nCreate a data frame\ngorillas &lt;- data.frame(age = age, weight = weight, height = height, alpha_status = alpha_status)\n\n\nDisplay the first few rows of the dataset\nhead(gorillas)\nlibrary(ggplot2)\n\n\nPlot age vs. weight\nggplot(gorillas, aes(x = age, y = weight)) + geom_point() + ggtitle(‘Age vs. Weight’) + theme_minimal()\n\n\nPlot weight vs. height\nggplot(gorillas, aes(x = weight, y = height)) + geom_point() + ggtitle(‘Weight vs. Height’) + theme_minimal()\n\n\nPlot weight vs. alpha status\nggplot(gorillas, aes(x = factor(alpha_status), y = weight)) + geom_boxplot() + ggtitle(‘Weight vs. Alpha Status’) + theme_minimal()\n\n\nLinear model: Weight ~ Age + Height\nlinear_model &lt;- lm(weight ~ age + height, data = gorillas) summary(linear_model)\n\n\nLogistic model: Alpha Status ~ Weight + Age\nlogistic_model &lt;- glm(alpha_status ~ weight + age, data = gorillas, family = binomial) summary(logistic_model)\n\n\nPredicted vs. actual weight (linear model)\ngorillas$predicted_weight &lt;- predict(linear_model, gorillas) ggplot(gorillas, aes(x = weight, y = predicted_weight)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = ‘red’, linetype = ‘dashed’) + ggtitle(‘Actual vs. Predicted Weight’) + theme_minimal()\n\n\nPredicted probabilities vs. actual alpha status (logistic model)\ngorillas$predicted_alpha_prob &lt;- predict(logistic_model, gorillas, type = “response”) ggplot(gorillas, aes(x = predicted_alpha_prob, fill = factor(alpha_status))) + geom_histogram(position = “identity”, alpha = 0.5, bins = 30) + ggtitle(‘Predicted Alpha Status Probabilities’) + theme_minimal() + labs(fill = ‘Alpha Status’)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "My website and data analysis portfolio",
+    "section": "",
+    "text": "Hello\n\nAnd hello again\nWelcome to Vinayak Revisanker’s website  and data analysis portfolio.\n\nPlease have fun and take a look around 😁."
+  }
+]

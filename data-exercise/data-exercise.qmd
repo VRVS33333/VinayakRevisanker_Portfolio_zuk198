@@ -1,0 +1,74 @@
+---
+title: "Data Exercise "
+---
+library(ggplot2)
+
+set.seed(42)
+
+# Generate age data
+age <- rnorm(1000, mean = 20, sd = 6) # Normal distribution, mean=20, sd=6
+age <- pmax(pmin(age, 30), 10) # Limit the age between 10 and 30
+
+# Generate weight data based on age
+weight <- 100 + age * 10 + rnorm(1000, mean = 0, sd = 15)
+
+# Generate height data based on weight
+height <- 120 + 0.4 * weight + rnorm(1000, mean = 0, sd = 10)
+
+# Generate alpha status based on weight and age
+alpha_prob <- 1 / (1 + exp(-0.05 * (weight + age - 200)))
+alpha_status <- rbinom(1000, 1, alpha_prob)
+
+# Create a data frame
+gorillas <- data.frame(age = age, weight = weight, height = height, alpha_status = alpha_status)
+
+# Display the first few rows of the dataset
+head(gorillas)
+
+library(ggplot2)
+
+# Plot age vs. weight
+ggplot(gorillas, aes(x = age, y = weight)) +
+  geom_point() +
+  ggtitle('Age vs. Weight') +
+  theme_minimal()
+
+# Plot weight vs. height
+ggplot(gorillas, aes(x = weight, y = height)) +
+  geom_point() +
+  ggtitle('Weight vs. Height') +
+  theme_minimal()
+
+# Plot weight vs. alpha status
+ggplot(gorillas, aes(x = factor(alpha_status), y = weight)) +
+  geom_boxplot() +
+  ggtitle('Weight vs. Alpha Status') +
+  theme_minimal()
+  
+  
+# Linear model: Weight ~ Age + Height
+linear_model <- lm(weight ~ age + height, data = gorillas)
+summary(linear_model)
+
+# Logistic model: Alpha Status ~ Weight + Age
+logistic_model <- glm(alpha_status ~ weight + age, data = gorillas, family = binomial)
+summary(logistic_model)
+
+
+
+
+# Predicted vs. actual weight (linear model)
+gorillas$predicted_weight <- predict(linear_model, gorillas)
+ggplot(gorillas, aes(x = weight, y = predicted_weight)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = 'red', linetype = 'dashed') +
+  ggtitle('Actual vs. Predicted Weight') +
+  theme_minimal()
+
+# Predicted probabilities vs. actual alpha status (logistic model)
+gorillas$predicted_alpha_prob <- predict(logistic_model, gorillas, type = "response")
+ggplot(gorillas, aes(x = predicted_alpha_prob, fill = factor(alpha_status))) +
+  geom_histogram(position = "identity", alpha = 0.5, bins = 30) +
+  ggtitle('Predicted Alpha Status Probabilities') +
+  theme_minimal() +
+  labs(fill = 'Alpha Status')
