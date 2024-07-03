@@ -1,0 +1,72 @@
+---
+title: "HW 5, CDC Exercise"
+author: "Vinayak Revisanker"
+
+---
+
+
+Deaths due to COVID from ages 0-18. Downloaded from the CDC website
+https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-Focus-on-Ages-0-18-Yea/nr4s-juj3/data_preview
+
+Libraries
+```{r}
+set.seed(200)
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+```{r}
+Deaths = read.csv("Provisional_COVID-19_Deaths__Focus_on_Ages_0-18_Years.csv", header=TRUE)
+dplyr::glimpse(Deaths)
+```
+
+
+
+Shows the the total amount of deaths from covid between ages 0-18
+```{r}
+result = Deaths %>% 
+  group_by(Age = as.factor(Age.group)) %>% 
+  summarize(Total = sum(COVID.19.Deaths)) %>% 
+  arrange(desc(Total)) %>% 
+  filter(Age != "19-44 years") %>% 
+  filter(Age != "45-64 years") %>% 
+  filter(Age != "65-74 years") %>% 
+  filter(Age != "75 years and over") %>% 
+  top_n(10, wt = Total)
+
+ggplot(result, aes(x=Age, y=Total))+
+    geom_bar(stat = "identity", fill = "Purple")
+```
+
+Seperating Race 
+
+```{r}
+Deaths = Deaths %>%  filter(Race.or.Hispanic.Origin.Group == "Non-Hispanic Asian")
+summary(Deaths)
+```
+
+
+```{r}
+
+ggplot(Deaths, aes(x = Start.Week, y = COVID.19.Deaths))+
+    geom_bar(stat = "identity", fill = "Purple")
+ 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,6 +20,8 @@ website:
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
           - text: "data exercise"
             file: data-exercise/data-exercise.qmd
+          - text: "HW5"
+            file: Exercise 5/HW5CDCExercise.qmd
 
     right:
       - icon: github 
