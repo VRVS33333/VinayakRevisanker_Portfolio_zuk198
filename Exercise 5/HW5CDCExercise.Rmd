@@ -54,7 +54,58 @@ ggplot(Deaths, aes(x = Start.Week, y = COVID.19.Deaths))+
     geom_bar(stat = "identity", fill = "Purple")
  
 ```
+# This section contributed by Tim Harrison.
 
+```{r}
+
+
+library(synthpop)
+
+# Set seed for reproducibility
+set.seed(200)
+
+# Load the filtered data
+Deaths <- read.csv("Provisional_COVID-19_Deaths__Focus_on_Ages_0-18_Years.csv", header = TRUE)
+
+# Glimpse of the original data
+dplyr::glimpse(Deaths)
+
+# Generate synthetic data using the synthpop package
+# The synthpop package generates synthetic data that retains the statistical properties of the original data.
+synth_data <- syn(Deaths, seed = 123)
+
+# Extract the synthetic data
+synthetic_data <- synth_data$syn
+
+# View the structure of the synthetic data
+str(synthetic_data)
+
+# Summarize synthetic data
+summary(synthetic_data)
+
+# Create summary table for synthetic data
+synthetic_summary <- synthetic_data %>%
+  group_by(Age.group) %>%
+  summarize(Total.Deaths = sum(COVID.19.Deaths))
+
+# Plot the total deaths by age group for synthetic data
+ggplot(synthetic_summary, aes(x = Age.group, y = Total.Deaths)) +
+  geom_bar(stat = "identity", fill = "Purple") +
+  ggtitle("Synthetic Data: Total COVID-19 Deaths by Age Group (0-18 years)") +
+  xlab("Age Group") +
+  ylab("Total Deaths")
+
+# Filter synthetic data for Non-Hispanic Asian group
+synthetic_asian <- synthetic_data %>%
+  filter(Race.or.Hispanic.Origin.Group == "Non-Hispanic Asian")
+
+# Summarize and plot synthetic data for Non-Hispanic Asian group
+ggplot(synthetic_asian, aes(x = Start.Week, y = COVID.19.Deaths)) +
+  geom_bar(stat = "identity", fill = "Purple") +
+  ggtitle("Synthetic Data: COVID-19 Deaths for Non-Hispanic Asian (0-18 years)") +
+  xlab("Start Week") +
+  ylab("Total Deaths")
+```
 
 
 
