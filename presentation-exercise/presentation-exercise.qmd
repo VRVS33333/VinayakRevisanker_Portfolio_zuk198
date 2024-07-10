@@ -2,4 +2,88 @@
 title: "Presentation Exercise"
 ---
 
-Placeholder file for the future data/results presentation exercise.
+For this exercise I decided to recreate a graph and table from a FiveThirtyEight article, where the data shows the NBA  predictions 
+
+```{r}
+library(readr) 
+library(dplyr) 
+library(ggplot2)
+library(tidyverse)
+library(gt)
+library(ggrepel)
+library(patchwork)
+library(grid)
+```
+
+
+Loading data
+
+```{r}
+#Loading data
+nfl_predictions_data <- read.csv("nfl_elo.csv", header = TRUE)
+
+```
+
+
+ELO ratings for New England Patriots
+```{r}
+# Filter data for a specific team, e.g., "NE" (New England Patriots)
+team_data <- nfl_predictions_data %>% filter(team1 == 'NE' | team2 == 'NE')
+
+# Create a new column to capture the ELO ratings of the selected team
+team_data <- team_data %>%
+  mutate(elo = ifelse(team1 == 'NE', elo1_pre, elo2_pre),
+         date = as.Date(date))
+
+# Plot ELO ratings over time
+ggplot(team_data, aes(x = date, y = elo)) +
+  geom_line() +
+  labs(title = "ELO Ratings Over Time for New England Patriots",
+       x = "Date",
+       y = "ELO Rating") +
+  theme_minimal()
+
+```
+
+Data summary for ELO ratings 
+
+```{r}
+
+# Create a new column to capture the ELO ratings and scores of the selected team
+team_data <- team_data %>%
+  mutate(elo = ifelse(team1 == 'NE', elo1_pre, elo2_pre),
+         score = ifelse(team1 == 'NE', score1, score2),
+         date = as.Date(date))
+
+
+
+
+
+# Select relevant columns for the table
+table_data <- team_data %>%
+  select(date, team1, team2, elo, score)
+
+# Create the table
+gt_table <- table_data %>%
+  gt() %>%
+  tab_header(
+    title = "ELO Ratings and Scores for New England Patriots"
+  ) %>%
+  cols_label(
+    date = "Date",
+    team1 = "Team 1",
+    team2 = "Team 2",
+    elo = "ELO Rating",
+    score = "Score"
+  ) %>%
+  fmt_date(
+    columns = vars(date),
+    date_style = 3
+  )
+
+# Print the table
+print(gt_table)
+
+
+
+```
