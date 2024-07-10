@@ -1,5 +1,8 @@
 ---
 title: "Presentation Exercise"
+
+Author: Vinayak Revisanker
+Published: 7/10/2024
 ---
 
 For this exercise I decided to recreate a graph and table from a FiveThirtyEight article, where the data shows the NBA  predictions 
