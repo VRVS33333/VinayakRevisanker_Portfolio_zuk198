@@ -1,3 +1,9 @@
+Correlation between CO2 and methane levels:
+Correlation between CO2 and methane levels: -0.484450717109386
+
+
+Linear Model Summary:
+
 
 Call:
 lm(formula = co2 ~ methane, data = train_data)
@@ -17,3 +23,9 @@ Residual standard error: 2.805 on 234 degrees of freedom
 Multiple R-squared:  0.2184,	Adjusted R-squared:  0.215 
 F-statistic: 65.37 on 1 and 234 DF,  p-value: 3.329e-14
 
+
+
+Model Evaluation Metrics:
+
+RMSE: 2.8156497018104
+R-squared: 0.218365844110571
