@@ -1,5 +1,172 @@
 ---
 title: "Tidy Tuesday Exercise"
+author: "Vinayak Revisanker"
+format: html
+editor: "visual"
 ---
+Libraries
+```{r}
+#Libraries
+library(tidyverse)
+library(hms)
+library(caret)
+```
+Due to be an older model, tidymodels would not run
 
-Placeholder file for the future Tidy Tuesday exercise.
+
+Reading and loading data 
+```{r}
+songData <- read.csv("songs.csv")
+
+songData
+
+```
+
+Cleaning up data
+```{r}
+#Looking for missing data
+sum(is.na(songData))
+
+summary(songData)
+
+# Convert variables to factors
+songData <- songData %>%
+  mutate(across(c(season, week, contestant, song, artist, song_theme, result), as.factor))
+
+# Filling in missing values
+songData$song_theme <- fct_na_value_to_level(songData$song_theme, "Unknown")
+
+#display all of the new data
+summary(songData)
+```
+
+
+Exploratory Data Analysis (EDA)
+```{r}
+songData %>%
+  select_if(is.numeric) %>% 
+  gather(key = "variable", value = "value") %>% 
+  ggplot(aes(x = value)) + 
+  geom_histogram(bins = 30) + 
+  facet_wrap(~ variable, scales = "free_x")
+```
+Hypothesis: Does genre of a music affect its popularity?
+
+
+Pre Processing Data
+```{r}
+# Further clean and split the data into training and testing sets
+set.seed(123)
+songs_split <- createDataPartition(songData$result, p = 0.8, list = FALSE)
+songs_train <- songData[songs_split, ]
+songs_test <- songData[-songs_split, ]
+
+# Impute missing values
+impute_mode <- function(x) {
+  uniqx <- unique(x)
+  uniqx[which.max(tabulate(match(x, uniqx)))]
+}
+
+songs_train <- songs_train %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), median(., na.rm = TRUE), .))) %>%
+  mutate(across(where(is.factor), ~ ifelse(is.na(.), impute_mode(.), .)))
+
+songs_test <- songs_test %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), median(., na.rm = TRUE), .))) %>%
+  mutate(across(where(is.factor), ~ ifelse(is.na(.), impute_mode(.), .)))
+
+# Manually normalize numeric features
+normalize <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}
+
+songs_train <- songs_train %>%
+  mutate(across(where(is.numeric), normalize))
+
+songs_test <- songs_test %>%
+  mutate(across(where(is.numeric), normalize))
+
+```
+
+Model Fitting
+```{r}
+# Define control for cross-validation
+control <- trainControl(method = "cv", number = 5, savePredictions = "final")
+
+# Model 1: Linear Regression
+lr_model <- train(
+  result ~ .,
+  data = songs_train,
+  method = "glm",
+  family = "binomial",
+  trControl = control
+)
+
+# Model 2: Random Forest
+rf_model <- train(
+  result ~ .,
+  data = songs_train,
+  method = "rf",
+  trControl = control
+)
+
+# Model 3: Support Vector Machine
+svm_model <- train(
+  result ~ .,
+  data = songs_train,
+  method = "svmRadial",
+  trControl = control
+)
+
+
+```
+
+
+
+Model Evaluation
+```{r}
+# Collect resampling metrics
+lr_results <- lr_model$results
+rf_results <- rf_model$results
+svm_results <- svm_model$results
+
+# Compare model performance
+results <- bind_rows(
+  lr_results %>% mutate(model = "Linear Regression"),
+  rf_results %>% mutate(model = "Random Forest"),
+  svm_results %>% mutate(model = "SVM")
+)
+results
+```
+
+
+
+Model Selection
+
+```{r}
+# Evaluate the chosen model on the test data
+test_predictions <- predict(final_model, newdata = songs_test)
+
+# Ensure both predictions and actual values are factors with the same levels
+test_predictions <- factor(test_predictions, levels = levels(songs_train$result))
+songs_test$result <- factor(songs_test$result, levels = levels(songs_train$result))
+
+# Print levels for debugging
+print("Levels of test_predictions:")
+print(levels(test_predictions))
+print("Levels of songs_test$result:")
+print(levels(songs_test$result))
+
+# Calculate performance metrics on the test data
+if (length(intersect(levels(test_predictions), levels(songs_test$result))) > 0) {
+  confusionMatrix(test_predictions, songs_test$result)
+} else {
+  print("No overlapping levels between predictions and actual results")
+}
+songs_test
+
+```
+
+
+Based on the data, it appears that genre doesn't effect the songs popularity
+
