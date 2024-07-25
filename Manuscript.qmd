@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 ---
-title: "Example Manuscript Template for a Data Analysis Project"
+title: "Final Project Manuscript"
 subtitle: ""
 author: Vinayak Revisanker
 date: "`r Sys.Date()`"
@@ -9,99 +8,110 @@ format:
     toc: false
     number-sections: true
     highlight-style: github
-bibliography: ../../assets/dataanalysis-references.bib
-csl: ../../assets/apa.csl
+
 ---
 
-The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. 
-You don't need to have exactly these sections, but the content covering those sections should be addressed.
-
-This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats.
-
+Libraries
 
 ```{r}
-# R packages
-library(here)
-library(knitr)
-library(DescTools)
-library(ResourceSelection)
-library(MASS) 
-library(car) 
-library(olsrr)
-library(LearnBayes)
-library(ggplot2)
-library(caret)
-library(earth)
 library(tidyverse)
 library(hms)
+library(ggplot2)
+```
+
+
+Reading and loading CSV file
+```{r}
+methane <- read_csv("Methane in the Furnance.csv", show_col_types = FALSE)
+
+methane
+
+```
+
+
+checking for missing values
+```{r}
+missing_values <- colSums(is.na(methane))
+
+print(missing_values)
+
+```
+
+
+summary statistics
+```{r}
+co2_summary <- summary(methane$co2)
+methane_summary <- summary(methane$methane)
+
+
+print(co2_summary)
+print(methane_summary)
+```
+
+Directories for plots and results
+```{r}
+dir.create("plots", showWarnings = FALSE)
+dir.create("results", showWarnings = FALSE)
+```
+
+
+plot of CO2 levels over time
+```{r}
+co2_plot <- ggplot(methane, aes(x = obs, y = co2)) +
+  geom_line(color = "blue") +
+  labs(title = "CO2 Levels Over Time", x = "Time", y = "CO2 Level") +
+  theme_minimal()
+ggsave("plots/co2_plot.png", plot = co2_plot)
+
+print(co2_plot)
+
+```
+
+
+Plot of methane levels over time
+```{r}
+methane_plot <- ggplot(methane, aes(x = obs, y = methane)) +
+  geom_line(color = "orange") +
+  labs(title = "Methane Levels Over Time", x = "Time", y = "Methane Level") +
+  theme_minimal()
+ggsave("plots/methane_plot.png", plot = methane_plot)
+
+print(methane_plot)
+
+```
+
+
+Correlation between CO2 and methane levels
+
+```{r}
+correlation <- cor(methane$co2, methane$methane, use = "complete.obs")
+print(paste("Correlation between CO2 and methane levels:", correlation))
+
+```
+
+
+Splitting data into training and testing sets
+```{r}
+set.seed(123)
+train_indices <- sample(1:nrow(methane), size = 0.8 * nrow(methane))
+train_data <- methane[train_indices, ]
+test_data <- methane[-train_indices, ]
+
 ```
 
 
 
+Linear model and summary
 ```{r}
-# Read the CSV file
-file_path <- "Methane in the Furnance.csv"
-df <- read_csv(file_path)
-
-# Convert 'obs' column to time format
-df <- df %>% mutate(obs = hms::as_hms(obs))
-
-# Check for missing values
-missing_values <- colSums(is.na(df))
-print(missing_values)
-
-# Handle missing values by filling with mean
-df <- df %>% mutate(
-  co2 = ifelse(is.na(co2), mean(co2, na.rm = TRUE), co2),
-  methane = ifelse(is.na(methane), mean(methane, na.rm = TRUE), methane)
-)
-
-# Summary statistics
-co2_summary <- summary(df$co2)
-methane_summary <- summary(df$methane)
-
-# Print summary statistics
-print(co2_summary)
-print(methane_summary)
-
-# Plot CO2 levels over time
-co2_plot <- ggplot(df, aes(x = obs, y = co2)) +
-  geom_line(color = "blue") +
-  labs(title = "CO2 Levels Over Time", x = "Time", y = "CO2 Level") +
-  theme_minimal()
-ggsave("co2_plot.png", plot = co2_plot)
-
-# Plot methane levels over time
-methane_plot <- ggplot(df, aes(x = obs, y = methane)) +
-  geom_line(color = "orange") +
-  labs(title = "Methane Levels Over Time", x = "Time", y = "Methane Level") +
-  theme_minimal()
-ggsave("methane_plot.png", plot = methane_plot)
-
-# Calculate the correlation between CO2 and methane levels
-correlation <- cor(df$co2, df$methane, use = "complete.obs")
-print(paste("Correlation between CO2 and methane levels:", correlation))
-
-# Save the correlation result
-dir.create("results", showWarnings = FALSE)
-write(paste("Correlation between CO2 and methane levels:", correlation), 
-      file = "results/analysis_summary.txt")
-
-# Additional analysis using base R
-# Split the data into training and testing sets
-set.seed(123)
-train_indices <- sample(1:nrow(df), size = 0.8 * nrow(df))
-train_data <- df[train_indices, ]
-test_data <- df[-train_indices, ]
-
-# Fit a linear model
 lm_fit <- lm(co2 ~ methane, data = train_data)
-
-# Model summary
 lm_summary <- summary(lm_fit)
 capture.output(lm_summary, file = "results/lm_summary.txt")
 
-# Model evaluation
+print(lm_fit)
+print(lm_summary)
+```
+Model evaulation
+```{r}
 predictions <- predict(lm_fit, newdata = test_data)
 actuals <- test_data$co2
 residuals <- actuals - predictions
@@ -109,41 +119,32 @@ mse <- mean(residuals^2)
 rmse <- sqrt(mse)
 r_squared <- lm_summary$r.squared
 
-# Print evaluation metrics
 print(paste("RMSE:", rmse))
 print(paste("R-squared:", r_squared))
 
-# Save evaluation metrics
+
 evaluation_metrics <- c(paste("RMSE:", rmse), paste("R-squared:", r_squared))
 write(evaluation_metrics, file = "results/metrics_summary.txt")
-
-# Create the manuscript directory
-dir.create("manuscript", showWarnings = FALSE)
-
-# Update the manuscript with new results
-# Read in results for the manuscript
-correlation <- readLines("results/analysis_summary.txt")
-lm_summary <- readLines("results/lm_summary.txt")
-metrics_summary <- readLines("results/metrics_summary.txt")
-
-# Print the manuscript results
-cat("Correlation between CO2 and methane levels:\n", correlation, "\n\n")
-cat("Linear Model Summary:\n", lm_summary, "\n\n")
-cat("Model Evaluation Metrics:\n", metrics_summary, "\n\n")
-
-# Write the manuscript results to a file
-manuscript_path <- "manuscript/results.txt"
-writeLines(c("Correlation between CO2 and methane levels:", correlation, 
-             "\n\nLinear Model Summary:\n", lm_summary, 
-             "\n\nModel Evaluation Metrics:\n", metrics_summary), 
-           con = manuscript_path)
-
 
 
 ```
 
+Manuscript directory and results
+
+```{r}
+dir.create("manuscript", showWarnings = FALSE)
 
 
+
+correlation <- readLines("results/analysis_summary.txt")
+lm_summary <- readLines("results/lm_summary.txt")
+metrics_summary <- readLines("results/metrics_summary.txt")
+
+
+print(correlation)
+print(lm_summary)
+print(metrics_summary)
+```
 
 # Discussion
 
