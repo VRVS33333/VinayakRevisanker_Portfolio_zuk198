@@ -8,9 +8,9 @@ This project analyzes the correlation between CO2 and methane levels over time u
 - `scripts/`: Directory containing the R scripts.
 - `plots/`: Directory containing the generated plots.
 - `results/`: Directory containing analysis summaries and metrics.
-- `manuscript/`: Directory containing the final report and supplementary materials.
+- `manuscript/`: Directory containing the results and supplementary materials.
 - `README.md`: Instructions on how to reproduce the analysis.
-- `data_description.txt`: Metadata explaining the data.
+
 
 ## Reproducing the Analysis
 1. Clone the repository.
